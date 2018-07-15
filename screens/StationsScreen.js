@@ -69,7 +69,7 @@ export default class HomeScreen extends React.Component {
     const data = await response.json();
     const trains = data.trains;
 
-    const ETA = parseInt(trains[0].destinations[0].eta) / 60;
+    const ETA = parseInt(parseInt(trains[0].destinations[0].eta) / 60);
 
     const message = `The next train will arive in ${ETA} mins`;
     Alert.alert('Estimated Time of Arrival', message);
