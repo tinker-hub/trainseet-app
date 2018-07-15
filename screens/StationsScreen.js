@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import {
   Badge,
   Body,
@@ -72,7 +72,7 @@ export default class HomeScreen extends React.Component {
     const ETA = parseInt(trains[0].destinations[0].eta) / 60;
 
     const message = `The next train will arive in ${ETA} mins`;
-    alert('ETA', message);
+    Alert.alert('Estimated Time of Arrival', message);
   };
 
   changeDirection = direction => {
