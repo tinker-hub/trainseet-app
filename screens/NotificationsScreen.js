@@ -3,25 +3,26 @@ import { StyleSheet } from 'react-native';
 import { Container, Content, Card, CardItem, Text, Body } from 'native-base';
 import SocketIOClient from 'socket.io-client';
 import moment from 'moment';
+import { BASE_URL } from '../api';
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     headerStyle: {
-      backgroundColor: '#ffc400'
+      backgroundColor: '#ffc400',
     },
     headerTitleStyle: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     },
 
-    title: 'Notifications'
+    title: 'Notifications',
   };
 
   state = {
-    notifications: []
+    notifications: [],
   };
 
   componentWillMount() {
-    this.socket = SocketIOClient('http://178.128.63.0:8081/');
+    this.socket = SocketIOClient(BASE_URL);
   }
 
   componentDidMount() {
@@ -29,7 +30,7 @@ export default class LinksScreen extends React.Component {
       const { notifications } = this.state;
 
       this.setState({
-        notifications: [data, ...notifications]
+        notifications: [data, ...notifications],
       });
     });
   }
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
-  date: { color: '#808080' }
+  date: { color: '#808080' },
 });

@@ -13,63 +13,50 @@ import {
   ListItem,
   Picker,
   Right,
-  Text
+  Text,
 } from 'native-base';
 import SocketIOClient from 'socket.io-client';
+import { BASE_URL, fetchStations, getETA } from '../api';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     headerStyle: {
-      backgroundColor: '#ffc400'
+      backgroundColor: '#ffc400',
     },
     headerTitleStyle: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     },
-
-    title: 'Stations'
+    title: 'Stations',
   };
 
   state = {
     density: 0,
     direction: undefined,
-    stations: []
+    stations: [],
   };
 
   componentWillMount() {
-    this.socket = SocketIOClient('http://1.31.246.34:8080/');
+    this.socket = SocketIOClient(BASE_URL);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.socket.on('density', density => {
-      console.log(density);
       this.setState({ density });
     });
-    this.getStations();
+
+    const stations = fetchStations();
+
+    this.setState({
+      stations,
+    });
   }
 
   componentWillUnmount() {
     this.socket.close();
   }
 
-  getStations = async () => {
-    const URL = 'http://178.128.63.0:8081';
-
-    const response = await fetch(`${URL}/api/stations`);
-    const stations = await response.json();
-
-    this.setState({
-      stations
-    });
-  };
-
-  handleOnPress = async _id => {
-    const URL = 'http://178.128.63.0:8081';
-
-    const response = await fetch(`${URL}/api/stations/${_id}`);
-    const data = await response.json();
-    const trains = data.trains;
-
-    const ETA = parseInt(parseInt(trains[0].destinations[0].eta) / 60);
+  handleOnPress = async stationId => {
+    const ETA = await getETA();
 
     const message = `The next train will arive in ${ETA} mins`;
     Alert.alert('Estimated Time of Arrival', message);
@@ -77,17 +64,17 @@ export default class HomeScreen extends React.Component {
 
   changeDirection = direction => {
     this.setState({
-      direction
+      direction,
     });
   };
 
   renderStatusIndicator(density) {
     return density ? (
-      density <= 20 ? (
+      density <= 10 ? (
         <Badge success style={styles.statusBadge}>
           <Text>L</Text>
         </Badge>
-      ) : density <= 60 ? (
+      ) : density <= 15 ? (
         <Badge warning style={styles.statusBadge}>
           <Text>M</Text>
         </Badge>
@@ -150,7 +137,7 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   statusBadge: {
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  stationList: {}
+  stationList: {},
 });
