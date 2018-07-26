@@ -44,7 +44,7 @@ export default class HomeScreen extends React.Component {
       this.setState({ density });
     });
 
-    const stations = fetchStations();
+    const stations = await fetchStations();
 
     this.setState({
       stations,
@@ -56,7 +56,7 @@ export default class HomeScreen extends React.Component {
   }
 
   handleOnPress = async stationId => {
-    const ETA = await getETA();
+    const ETA = await getETA(stationId);
 
     const message = `The next train will arive in ${ETA} mins`;
     Alert.alert('Estimated Time of Arrival', message);
@@ -74,7 +74,7 @@ export default class HomeScreen extends React.Component {
         <Badge success style={styles.statusBadge}>
           <Text>L</Text>
         </Badge>
-      ) : density <= 15 ? (
+      ) : density <= 20 ? (
         <Badge warning style={styles.statusBadge}>
           <Text>M</Text>
         </Badge>
