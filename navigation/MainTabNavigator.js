@@ -44,5 +44,4 @@ AnalyticsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   StationsStack,
-  NotificationsStack
 });
